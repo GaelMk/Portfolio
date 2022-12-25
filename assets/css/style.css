@@ -548,11 +548,11 @@ dl, ol, ul {
 	position: relative;
 	color: #fff;
 	text-align: center;
-	/*background: url(../img/home-bg.jpg);*/
+	/*background: url(../img/home-bg.jpg);
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center center;
-	background-attachment: fixed;
+	background-attachment: fixed;*/
 	z-index: 1;
 	padding-bottom: 0px;
 }
