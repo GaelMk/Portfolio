@@ -1,0 +1,75 @@
+<?php
+header("Content-Type: application/json");
+
+// Vérifier le token d'application (cela peut être plus complexe dans un environnement de production)
+$token = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : '';
+if ($token !== 'votre_token_d_application') {
+    http_response_code(401); // Non autorisé
+    echo json_encode(['message' => 'Token d\'application non valide']);
+    exit();
+}
+
+// Inclure les fichiers nécessaires pour gérer les routes
+require_once 'routes/userRoutes.php';
+
+// Gestion de la route
+$method = $_SERVER['REQUEST_METHOD'];
+$path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
+
+// Dispatch des routes
+if ($path === '/users' && $method === 'GET') {
+    get_users();
+} else {
+    http_response_code(404); // Non trouvé
+    echo json_encode(['message' => 'Endpoint non trouvé']);
+}
+
+<?php
+
+function get_users() {
+    // Ici, vous récupéreriez vos utilisateurs depuis la base de données ou toute autre source de données
+    $users = [
+        ['id' => 1, 'name' => 'John Doe'],
+        ['id' => 2, 'name' => 'Jane Doe'],
+    ];
+
+    echo json_encode($users);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Consumer</title>
+</head>
+<body>
+
+    <script>
+        const apiEndpoint = 'http://votre_domaine/votre_chemin_vers_api/index.php/users'; // Remplacez ceci par l'URL de votre API
+
+        // Utilisation de fetch pour obtenir les données
+        fetch(apiEndpoint, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'votre_token_d_application' // Remplacez ceci par votre token d'application
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP! Statut : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Gérer les données ici
+            console.log(data);
+        })
+        .catch(error => {
+            // Gérer les erreurs ici
+            console.error('Erreur lors de la récupération des données :', error.message);
+        });
+    </script>
+
+</body>
+</html>
